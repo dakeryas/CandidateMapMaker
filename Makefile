@@ -1,0 +1,59 @@
+CXX = clang++
+ODIR = ./objects
+SDIR = ./src
+IDIR = ./include
+MAIN = CandidateMapMaker.cpp
+EXECUTABLE = $(patsubst %.cpp,%, $(MAIN))
+
+MAKEFLAGS := -j$(shell nproc)
+ROOTFLAGS := $(shell root-config --cflags)
+INCLUDEFLAGS := -I. -I$(IDIR)
+INCLUDEFLAGS += -I$(APPLICATIONS_PATH)
+INCLUDEFLAGS += -I$(BOOST_PATH)/include
+INCLUDEFLAGS += -I$(DOGS_PATH)/include
+OPTFLAGS := -Wall -Wextra -O3 -MMD -MP
+FLAGS = $(ROOTFLAGS) $(INCLUDEFLAGS) $(OPTFLAGS)
+
+LIBS :=  $(shell root-config --libs)
+LIBS += -lrt
+LIBS += -L$(DOGS_PATH)/lib/
+LIBS += -lDCBase
+LIBS += -lDCDB
+LIBS += -lDCGeo
+LIBS += -lDCEvent
+LIBS += -lDCValidity
+LIBS += -lDCRegistry
+LIBS += -lDCDBInterface
+LIBS += -lDCCalibApply
+LIBS += -lDCUtil
+LIBS += -L$(BOOST_PATH)/lib -lboost_filesystem -lboost_system -lboost_program_options
+
+OBJS := $(patsubst %.cpp,%.o,$(addprefix $(ODIR)/,$(wildcard *.cpp)))
+OBJS += $(patsubst $(SDIR)/%.cpp,$(ODIR)/%.o,$(wildcard $(SDIR)/*.cpp))
+
+DEPS = $(patsubst %.o,%.d, $(OBJS))
+
+.PHONY: clean
+
+all: $(EXECUTABLE)  
+
+debug: OPTFLAGS = -Wall -Wextra -O0 -g
+debug: all
+
+$(OBJS): | $(ODIR)
+$(ODIR):
+	mkdir -p $(ODIR)
+
+$(ODIR)/$(MAIN:.cpp=.o): $(MAIN)
+	$(CXX) $(FLAGS) -c -o $@ $<
+
+$(ODIR)/%.o:$(SDIR)/%.cpp $(IDIR)/%.hpp
+	$(CXX) $(FLAGS) -c -o $@ $<
+	
+$(EXECUTABLE):$(OBJS)
+	$(CXX) -o $@  $^ $(LIBS)
+
+clean:
+	rm -f $(ODIR)/*.o $(DEPS) $(SDIR)/*~ $(IDIR)/*~ $(EXECUTABLE) *~
+	
+-include $(DEPS)
