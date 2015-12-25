@@ -1,8 +1,8 @@
-#include "MapGrabber.hpp"
+#include "MapMaker.hpp"
 
 namespace CandidateMapMaker{
 
-  MapGrabber::MapGrabber(const SelectionLabels& selectionLabels):selectionLabels(selectionLabels){
+  MapMaker::MapMaker(const SelectionLabels& selectionLabels):selectionLabels(selectionLabels){
     
     auto dataBase = FileDB::GetME();
     dataBase->UseQCInfo(true);
@@ -13,7 +13,7 @@ namespace CandidateMapMaker{
 
   }
   
-  std::unordered_map<unsigned, std::vector<unsigned>> MapGrabber::getMap() const{
+  std::unordered_map<unsigned, std::vector<unsigned>> MapMaker::getMap() const{
     
     std::unordered_map<unsigned, std::vector<unsigned>> candidatesMap;
     

@@ -4,7 +4,7 @@
 #include "cereal/archives/binary.hpp"
 #include "cereal/types/unordered_map.hpp"
 #include "cereal/types/vector.hpp"
-#include "MapGrabber.hpp"
+#include "MapMaker.hpp"
 
 namespace bpo = boost::program_options;
 
@@ -14,8 +14,8 @@ namespace CandidateMapMaker{
 
     Message::SetLevelMSG(DC::kMERROR);
     
-    MapGrabber mapGrabber(selectionLabels);
-    auto candidatesMap = mapGrabber.getMap();
+    MapMaker mapMaker(selectionLabels);
+    auto candidatesMap = mapMaker.getMap();
     
     std::ofstream outputStream(outputPath.string(), std::ios::binary);
     cereal::BinaryOutputArchive outputArchive(outputStream);

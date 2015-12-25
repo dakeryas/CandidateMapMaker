@@ -11,13 +11,13 @@ namespace CandidateMapMaker{
     
   };
   
-  class MapGrabber{
+  class MapMaker{
     
     SelectionLabels selectionLabels;
     std::vector<unsigned> runNumbers;
     
   public:
-    MapGrabber(const SelectionLabels& selectionLabels);
+    MapMaker(const SelectionLabels& selectionLabels);
     std::unordered_map<unsigned, std::vector<unsigned>> getMap() const;
     
   };
