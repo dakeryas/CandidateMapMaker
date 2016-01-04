@@ -36,7 +36,7 @@ int main(int argc, char* argv[]){
   ("run-list,r", bpo::value<std::string>(&runListLabel)->required(), "Label of the tagged run list")
   ("production,p", bpo::value<std::string>(&productionLabel)->required(), "Label of the production in the file database")
   ("data-selection,d", bpo::value<std::string>(&dataSelectionLabel)->required(), "Label of the data selection")
-  ("output,o", bpo::value<boost::filesystem::path>(&outputPath)->required(), "Output file where to save the candidate trees");
+  ("output,o", bpo::value<boost::filesystem::path>(&outputPath)->required(), "Output file where to save the candidate map");
 
   bpo::positional_options_description positionalOptions;//to use arguments without "--"
   positionalOptions.add("run-list-label", 1);

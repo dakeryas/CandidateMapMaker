@@ -4,10 +4,19 @@ namespace CandidateMapMaker{
 
   namespace RunFilter{
     
+    std::string getDetector(const std::string& runListLabel){
+      
+      std::regex regex("_([N|F]D)_");
+      std::smatch regexMatches;
+      if(std::regex_search(runListLabel, regexMatches, regex)) return regexMatches.str(1);
+      else return "FD";
+      
+    }
+    
     unsigned getRunNumber(const std::string& runFilePath){
       
       unsigned runNumber{};
-      std::regex regex("/?\\w+([1-9][0-9]{4,6})\\w+\\.root");
+      std::regex regex("/?\\w+([1-9][0-9]{4,6})\\w+\\.root$");
       std::smatch regexMatches;
       if(std::regex_search(runFilePath, regexMatches, regex)) runNumber = std::stoul(regexMatches.str(1));
       
@@ -18,6 +27,7 @@ namespace CandidateMapMaker{
     std::vector<unsigned> getRunNumbers(const SelectionLabels& selectionLabels){
       
       auto dataBase = FileDB::GetME();
+      dataBase->SetDetector(getDetector(selectionLabels.runList));
       dataBase->UseQCInfo(true);
       dataBase->SetLABEL(selectionLabels.dataType);
       dataBase->UseTaggedTable(selectionLabels.runList);

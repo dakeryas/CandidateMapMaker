@@ -16,6 +16,7 @@ namespace CandidateMapMaker{
       
     };
     
+    std::string getDetector(const std::string& runListLabel);
     unsigned getRunNumber(const std::string& runFilePath);
     std::vector<unsigned> getRunNumbers(const SelectionLabels& selectionLabels);
     
