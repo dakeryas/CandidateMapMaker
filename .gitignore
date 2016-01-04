@@ -1,0 +1,9 @@
+.gitignore
+CandidateMapMaker
+*.[oda]
+*.kdev*
+*.kdev4
+*.bin
+*~
+
+
