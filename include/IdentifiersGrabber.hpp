@@ -1,3 +1,6 @@
+#ifndef CANDIDATE_MAP_MAKER_IDENTIFIERS_GRABBER_H
+#define CANDIDATE_MAP_MAKER_IDENTIFIERS_GRABBER_H
+
 #include "DCCalib-TypeDef.hh"
 
 namespace CandidateMapMaker{
@@ -14,3 +17,5 @@ namespace CandidateMapMaker{
   };
   
 }
+
+#endif

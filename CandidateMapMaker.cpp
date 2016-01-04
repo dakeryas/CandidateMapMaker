@@ -10,7 +10,7 @@ namespace bpo = boost::program_options;
 
 namespace CandidateMapMaker{
   
-  void makeMap(const SelectionLabels& selectionLabels, const boost::filesystem::path& outputPath){
+  void makeMap(const RunFilter::SelectionLabels& selectionLabels, const boost::filesystem::path& outputPath){
 
     Message::SetLevelMSG(DC::kMERROR);
     
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]){
     
   }
 
-  CandidateMapMaker::makeMap(CandidateMapMaker::SelectionLabels{runListLabel, productionLabel, dataSelectionLabel}, outputPath);
+  CandidateMapMaker::makeMap(CandidateMapMaker::RunFilter::SelectionLabels{runListLabel, productionLabel, dataSelectionLabel}, outputPath);
 
   
 }

@@ -2,15 +2,8 @@
 
 namespace CandidateMapMaker{
 
-  MapMaker::MapMaker(const SelectionLabels& selectionLabels):selectionLabels(selectionLabels){
+  MapMaker::MapMaker(RunFilter::SelectionLabels selectionLabels):selectionLabels(std::move(selectionLabels)),runNumbers(RunFilter::getRunNumbers(this->selectionLabels)){
     
-    auto dataBase = FileDB::GetME();
-    dataBase->UseQCInfo(true);
-    dataBase->UseTaggedTable(selectionLabels.runList);
-    dataBase->GenQuery();
-    runNumbers = dataBase->LoadRuns();
-    
-
   }
   
   std::unordered_map<unsigned, std::vector<unsigned>> MapMaker::getMap() const{
