@@ -16,7 +16,7 @@ namespace CandidateMapMaker{
     unsigned getRunNumber(const std::string& runFilePath){
       
       unsigned runNumber{};
-      std::regex regex("/?\\w+([1-9][0-9]{4,6})\\w+\\.root$");
+      std::regex regex("/?[\\D|0]*([1-9][0-9]{4,6})(?:\\D\\w+)?\\.root$");
       std::smatch regexMatches;
       if(std::regex_search(runFilePath, regexMatches, regex)) runNumber = std::stoul(regexMatches.str(1));
       
