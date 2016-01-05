@@ -22,7 +22,8 @@ namespace CandidateMapMaker{
 	
       globalInfo = energyDeposit.GetGlobalInfo();
       unsigned identifier = globalInfo->GetTriggerID();
-      candidateIdentifiers.emplace_back(identifier);
+      if(candidateIdentifiers.empty()) candidateIdentifiers.emplace_back(identifier);
+      else if(identifier != candidateIdentifiers.back() + 1) candidateIdentifiers.emplace_back(identifier);
       
     }
     
