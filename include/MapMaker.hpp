@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include "RunFilter.hpp"
-#include "IdentifiersGrabber.hpp"
+#include "CandidateIdentifiersGrabber.hpp"
 
 namespace CandidateMapMaker{
 
@@ -11,10 +11,11 @@ namespace CandidateMapMaker{
     
     RunFilter::SelectionLabels selectionLabels;
     std::vector<unsigned> runNumbers;
+    CandidateIdentifiersGrabber candidateIdentifiersGrabber;
     
   public:
-    MapMaker(RunFilter::SelectionLabels selectionLabels);
-    std::unordered_map<unsigned, std::vector<unsigned>> getMap() const;
+    MapMaker(RunFilter::SelectionLabels selectionLabels, CosmogenicHunter::Bounds<double> candidateEnergyBounds);
+    std::unordered_map<unsigned, std::vector<unsigned>> getMap();
     
   };
   

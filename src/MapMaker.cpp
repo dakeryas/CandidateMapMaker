@@ -2,18 +2,18 @@
 
 namespace CandidateMapMaker{
 
-  MapMaker::MapMaker(RunFilter::SelectionLabels selectionLabels):selectionLabels(std::move(selectionLabels)),runNumbers(RunFilter::getRunNumbers(this->selectionLabels)){
+  MapMaker::MapMaker(RunFilter::SelectionLabels selectionLabels, CosmogenicHunter::Bounds<double> candidateEnergyBounds)
+  :selectionLabels(std::move(selectionLabels)),runNumbers(RunFilter::getRunNumbers(this->selectionLabels)),candidateIdentifiersGrabber(this->selectionLabels.production, this->selectionLabels.dataType, std::move(candidateEnergyBounds)){
     
   }
   
-  std::unordered_map<unsigned, std::vector<unsigned>> MapMaker::getMap() const{
+  std::unordered_map<unsigned, std::vector<unsigned>> MapMaker::getMap(){
     
     std::unordered_map<unsigned, std::vector<unsigned>> candidatesMap;
     
     for(auto runNumber : runNumbers){
       
-      CandidateIdentifiersGrabber candidateIdentifiersGrabber(runNumber, selectionLabels.production, selectionLabels.dataType);
-      auto candidateIdentifiers = candidateIdentifiersGrabber.getCandidateIdentifiers();
+      auto candidateIdentifiers = candidateIdentifiersGrabber.getCandidateIdentifiers(runNumber);
       if(!candidateIdentifiers.empty()) candidatesMap[runNumber] = candidateIdentifiers;
     
     }

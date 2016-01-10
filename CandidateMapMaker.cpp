@@ -10,11 +10,11 @@ namespace bpo = boost::program_options;
 
 namespace CandidateMapMaker{
   
-  void makeMap(const RunFilter::SelectionLabels& selectionLabels, const boost::filesystem::path& outputPath){
+  void makeMap(const RunFilter::SelectionLabels& selectionLabels, const CosmogenicHunter::Bounds<double>& candidateEnergyBounds, const boost::filesystem::path& outputPath){
 
     Message::SetLevelMSG(DC::kMERROR);
     
-    MapMaker mapMaker(selectionLabels);
+    MapMaker mapMaker(selectionLabels, candidateEnergyBounds);
     auto candidatesMap = mapMaker.getMap();
     
     std::ofstream outputStream(outputPath.string(), std::ios::binary);
@@ -28,6 +28,7 @@ namespace CandidateMapMaker{
 int main(int argc, char* argv[]){
  
   std::string runListLabel, productionLabel, dataSelectionLabel;
+  CosmogenicHunter::Bounds<double> candidateEnergyBounds;
   boost::filesystem::path outputPath;
   
   bpo::options_description optionDescription("CandidateMapMaker usage");
@@ -36,6 +37,7 @@ int main(int argc, char* argv[]){
   ("run-list,r", bpo::value<std::string>(&runListLabel)->required(), "Label of the tagged run list")
   ("production,p", bpo::value<std::string>(&productionLabel)->required(), "Label of the production in the file database")
   ("data-selection,d", bpo::value<std::string>(&dataSelectionLabel)->required(), "Label of the data selection")
+  ("candidate-energy-bounds", bpo::value<CosmogenicHunter::Bounds<double>>(&candidateEnergyBounds)->required(), "Bounds (':' separator) on the candidate's energy (MeV)")
   ("output,o", bpo::value<boost::filesystem::path>(&outputPath)->required(), "Output file where to save the candidate map");
 
   bpo::positional_options_description positionalOptions;//to use arguments without "--"
@@ -63,7 +65,7 @@ int main(int argc, char* argv[]){
     
   }
 
-  CandidateMapMaker::makeMap(CandidateMapMaker::RunFilter::SelectionLabels{runListLabel, productionLabel, dataSelectionLabel}, outputPath);
+  CandidateMapMaker::makeMap(CandidateMapMaker::RunFilter::SelectionLabels{runListLabel, productionLabel, dataSelectionLabel}, candidateEnergyBounds, outputPath);
 
   
 }
