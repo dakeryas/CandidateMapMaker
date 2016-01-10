@@ -7,18 +7,16 @@ namespace CandidateMapMaker{
     
   }
   
-  void CandidateIdentifiersGrabber::UpdateCandidateIdentifiers(std::vector<unsigned>& candidateIdentifiers){
+  void CandidateIdentifiersGrabber::UpdateCandidateIdentifiers(const EnDep& currentEnergyDeposit, std::vector<unsigned>& candidateIdentifiers){
     
-    auto globalInfo = energyDeposit.GetGlobalInfo();
-    auto recoBAMAInfo = energyDeposit.GetRecoBAMAInfo();
+    auto globalInfo = currentEnergyDeposit.GetGlobalInfo();
+    auto recoBAMAInfo = currentEnergyDeposit.GetRecoBAMAInfo();
     
     CosmogenicHunter::Point<double> position(recoBAMAInfo->GetRecoX()[0], recoBAMAInfo->GetRecoX()[1], recoBAMAInfo->GetRecoX()[2]);
     auto numberOfPhotoElectrons = globalInfo->GetCaloPEID(DC::kCaloPEDefaultDC);
-    auto energy = Calib::GetME(energyDeposit.GetVldContext())->EvisID(numberOfPhotoElectrons, globalInfo->GetNGoodChID(), position.getR(), position.getZ(), DCSimFlag::kDATA, DC::kESv10);
+    auto energy = Calib::GetME(currentEnergyDeposit.GetVldContext())->EvisID(numberOfPhotoElectrons, globalInfo->GetNGoodChID(), position.getR(), position.getZ(), DCSimFlag::kDATA, DC::kESv10);
     
-    CosmogenicHunter::Event<double> currentEvent{globalInfo->GetTrigTime(), energy, globalInfo->GetTriggerID()};
-    
-    if(currentEvent.hasVisibleEnergyWithin(candidateEnergyBounds)) candidateIdentifiers.emplace_back(currentEvent.getIdentifier());
+    if(candidateEnergyBounds.contains(energy)) candidateIdentifiers.emplace_back(globalInfo->GetTriggerID());
 
   }
 
@@ -26,15 +24,18 @@ namespace CandidateMapMaker{
     
     EnDep::AddFileDBINFO(production, std::to_string(runNumber),"");
     EnDep::SetLabelINPUT(dataType);
-    energyDeposit.CancelAllInfoCapsule_Tree();
-    energyDeposit.UncancelInfoCapsule_Tree(DC::kGlobalIT);
-    energyDeposit.UncancelInfoCapsule_Tree(DC::kRunIT);
-    energyDeposit.UncancelInfoCapsule_Tree(DC::kRecoBAMAIT);
-    energyDeposit.RetrieveME();
+    
+    EnDep currentEnergyDeposit;
+    currentEnergyDeposit.CancelAllInfoCapsule_Tree();
+    currentEnergyDeposit.UncancelInfoCapsule_Tree(DC::kGlobalIT);
+    currentEnergyDeposit.UncancelInfoCapsule_Tree(DC::kRunIT);
+    currentEnergyDeposit.UncancelInfoCapsule_Tree(DC::kRecoBAMAIT);
+    currentEnergyDeposit.RetrieveME();
     
     std::vector<unsigned> candidateIdentifiers;
-    while(energyDeposit.Next())
-      if(energyDeposit.GetN() % 2) UpdateCandidateIdentifiers(candidateIdentifiers); //GetN() starts at 1 and we want prompts only so the rest of division by 2 should be 1 (hence 'true')
+    while(currentEnergyDeposit.Next())
+      if(currentEnergyDeposit.GetN() % 2) UpdateCandidateIdentifiers(currentEnergyDeposit, candidateIdentifiers); //GetN() starts at 1 and we want prompts only so the rest of division by 2 should be 1 (hence 'true')
+    
     return candidateIdentifiers;
 
   }

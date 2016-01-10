@@ -2,7 +2,7 @@
 #define CANDIDATE_MAP_MAKER_CANDIDATE_IDENTIFIERS_GRABBER_H
 
 #include "DCCalib-TypeDef.hh"
-#include "Cosmogenic/Event.hpp"
+#include "Cosmogenic/Bounds.hpp"
 #include "Cosmogenic/Point.hpp"
 
 namespace CandidateMapMaker{
@@ -12,8 +12,7 @@ namespace CandidateMapMaker{
     std::string production;
     std::string dataType;
     CosmogenicHunter::Bounds<double> candidateEnergyBounds;
-    EnDep energyDeposit;
-    void UpdateCandidateIdentifiers(std::vector<unsigned>& candidateIdentifiers);
+    void UpdateCandidateIdentifiers(const EnDep& currentEnergyDeposit,  std::vector<unsigned>& candidateIdentifiers);
     
   public:
     CandidateIdentifiersGrabber(std::string production, std::string dataType, CosmogenicHunter::Bounds<double> candidateEnergyBounds);
