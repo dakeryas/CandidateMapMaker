@@ -34,14 +34,14 @@ int main(int argc, char* argv[]){
   bpo::options_description optionDescription("CandidateMapMaker usage");
   optionDescription.add_options()
   ("help,h", "Display this help message")
-  ("run-list,r", bpo::value<std::string>(&runListLabel)->required(), "Label of the tagged run list")
+  ("run-list", bpo::value<std::string>(&runListLabel)->required(), "Label of the tagged run list")
   ("production,p", bpo::value<std::string>(&productionLabel)->required(), "Label of the production in the file database")
   ("data-selection,d", bpo::value<std::string>(&dataSelectionLabel)->required(), "Label of the data selection")
   ("candidate-energy-bounds", bpo::value<CosmogenicHunter::Bounds<double>>(&candidateEnergyBounds)->required(), "Bounds (':' separator) on the candidate's energy (MeV)")
   ("output,o", bpo::value<boost::filesystem::path>(&outputPath)->required(), "Output file where to save the candidate map");
 
   bpo::positional_options_description positionalOptions;//to use arguments without "--"
-  positionalOptions.add("run-list-label", 1);
+  positionalOptions.add("run-list", 1);
   
   bpo::variables_map arguments;
   try{
